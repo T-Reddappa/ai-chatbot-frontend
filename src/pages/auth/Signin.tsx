@@ -1,12 +1,18 @@
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { FaRegEyeSlash } from "react-icons/fa";
 import { FaRegEye } from "react-icons/fa";
 import { useNavigate } from "react-router";
+import { AppDispatch, RootState } from "@/store/store";
+import { signInUser } from "@/store/slices/authSlice";
 
 const Signin = () => {
+  const dispatch: AppDispatch = useDispatch();
+  const auth = useSelector((state: RootState) => state.auth);
+
   const initialFormState = {
     username: "",
     password: "",
@@ -22,17 +28,18 @@ const Signin = () => {
     setFormData(userInputs);
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSignin = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log(formData);
-    setFormData(initialFormState);
+    dispatch(signInUser(formData));
   };
 
   return (
     <div className="w-full h-[100vh] flex justify-center items-center bg-[url(/ai-img.jpg)] bg-cover text-white ">
+      {auth.message && <p>{auth.message}</p>}
       <form
         action="submit"
-        onSubmit={handleSubmit}
+        onSubmit={handleSignin}
         className=" w-[30rem] px-5 py-10 border-gray-400 grid max-w-sm items-center gap-5 border-2 rounded-xl"
       >
         <div className="text-3xl font-bold text-center">Sign In</div>
@@ -55,7 +62,7 @@ const Signin = () => {
           </div>
         </div>
         <Button type="submit" className="cursor-pointer">
-          Sign In
+          {auth.loading ? "Signing in..." : "Sign In"}
         </Button>
         <Button
           variant="secondary"
