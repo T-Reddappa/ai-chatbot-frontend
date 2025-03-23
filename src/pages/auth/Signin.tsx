@@ -30,7 +30,6 @@ const Signin = () => {
 
   const handleSignin = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(formData);
     dispatch(signInUser(formData));
   };
 

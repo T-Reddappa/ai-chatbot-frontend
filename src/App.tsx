@@ -6,20 +6,47 @@ import Signin from "./pages/auth/Signin";
 import Signup from "./pages/auth/Signup";
 import Footer from "./components/Layout/Footer";
 import Header from "./components/Layout/Header";
+import ChatInterface from "./components/chat/ChatInterface";
+import WebSocketChat from "./components/chat/webSocketChat";
+import CombinedWebSocketChat from "./components/chat/combinedChat";
+import Home from "./components/Layout/Home";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { loadAuthFromStorage } from "./store/slices/authSlice";
+import PrivateRoute from "./components/privateRoute";
 
 function App() {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(loadAuthFromStorage());
+  }, []);
   return (
     <div>
       <div>
         <Header />
       </div>
-      <div className="min-h-screen bg-gray-50">
+      <div className="bg-[#111822]">
+        {/* <div className="px-10"> */}
         <Routes>
+          <Route path="/" element={<Home />} />{" "}
           <Route path="/characters" element={<CharacterSelection />} />
+          <Route
+            path="/chats/:characterId"
+            element={
+              <PrivateRoute>
+                <ChatInterface />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/chat/:characterId"
+            element={<CombinedWebSocketChat />}
+          />
           {/* <Route path="/chat/:characterId" element={<ChatInterface />} /> */}
           <Route path="/signin" element={<Signin />} />
           <Route path="/signup" element={<Signup />} />
         </Routes>
+        {/* </div> */}
       </div>
       <Footer />
     </div>

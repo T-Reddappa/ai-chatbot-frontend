@@ -1,8 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { signInUser } from "@/store/slices/authSlice";
+import { AppDispatch } from "@/store/store";
 import { useState } from "react";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
 
 const Signup = () => {
@@ -12,6 +15,7 @@ const Signup = () => {
   };
   const [formData, setFormData] = useState(initialFormState);
   const [showPassword, setShowPassword] = useState(false);
+  const dispatch: AppDispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -23,8 +27,9 @@ const Signup = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("signup");
+    dispatch(signInUser(formData));
   };
+
   return (
     <div className="w-full h-[100vh] flex justify-center items-center  bg-[url(/ai-img.jpg)] bg-cover text-white">
       <form
