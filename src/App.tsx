@@ -14,6 +14,7 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { loadAuthFromStorage } from "./store/slices/authSlice";
 import PrivateRoute from "./components/privateRoute";
+import Nudge from "./components/Layout/Nudge";
 
 function App() {
   const dispatch = useDispatch();
@@ -25,24 +26,20 @@ function App() {
       <div>
         <Header />
       </div>
-      <div className="bg-[#111822]">
+      <div className="bg-gradient-to-br from-gray-900 via-red-900 to-gray-900">
         {/* <div className="px-10"> */}
         <Routes>
           <Route path="/" element={<Home />} />{" "}
           <Route path="/characters" element={<CharacterSelection />} />
           <Route
-            path="/chats/:characterId"
+            path="/chat/:characterId"
             element={
               <PrivateRoute>
-                <ChatInterface />
+                <CombinedWebSocketChat />
               </PrivateRoute>
             }
           />
-          <Route
-            path="/chat/:characterId"
-            element={<CombinedWebSocketChat />}
-          />
-          {/* <Route path="/chat/:characterId" element={<ChatInterface />} /> */}
+          <Route path="/nudge" element={<Nudge />} />
           <Route path="/signin" element={<Signin />} />
           <Route path="/signup" element={<Signup />} />
         </Routes>

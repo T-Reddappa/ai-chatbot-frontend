@@ -8,7 +8,11 @@ interface PrivateRouteProps {
 const PrivateRoute: React.FC<PrivateRouteProps> = ({ children }) => {
   const authData = JSON.parse(localStorage.getItem("authData") || "{}");
 
-  return authData && authData.token ? <>{children}</> : <Navigate to="/" />;
+  return authData && authData.token ? (
+    <>{children}</>
+  ) : (
+    <Navigate to="/nudge" />
+  );
 };
 
 export default PrivateRoute;

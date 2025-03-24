@@ -24,9 +24,9 @@ const CharacterGrid = () => {
       <h3>Chat with your fav character</h3>
       <div className="flex gap-2">
         {characters.map((char) => (
-          <div className="flex flex-col gap-3 pb-3">
+          <div className="flex flex-col gap-2 pb-3">
             <div
-              className="w-full bg-center bg-no-repeat aspect-square bg-cover rounded-xl"
+              className="w-[20px] bg-center bg-no-repeat aspect-square bg-cover rounded-xl"
               style={{
                 backgroundImage: `url(
                   "https://cdn.usegalileo.ai/sdxl10/cfee24ae-5bde-4dda-856c-7ca1211154eb.png"
