@@ -7,18 +7,23 @@ import {
 } from "../../store/slices/chatSlice";
 import { motion, AnimatePresence } from "framer-motion";
 import { IoMdArrowBack } from "react-icons/io";
+import { RootState } from "@/store/store";
 
 const CombinedWebSocketChat = () => {
-  const filteredChats = useSelector((state) => state.chat.filteredChats);
-  const characters = useSelector((state) => state.characters.characters);
+  const filteredChats = useSelector(
+    (state: RootState) => state.chat.filteredChats
+  );
+  const characters = useSelector(
+    (state: RootState) => state.characters.characters
+  );
   console.log("characters from chat", characters);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { characterId } = useParams();
   const [input, setInput] = useState("");
   const [isWaiting, setIsWaiting] = useState(false);
-  const ws = useRef(null);
-  const messagesEndRef = useRef(null);
+  const ws = useRef<WebSocket | null>(null);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
   const selectedCharacter = characters?.find(
     (char) => char._id === characterId
   );
@@ -37,7 +42,9 @@ const CombinedWebSocketChat = () => {
     ws.current.onmessage = (event) => {
       const message = JSON.parse(event.data);
       console.log("New WebSocket message:", message);
-      dispatch(addMessage({ characterId, message }));
+      if (characterId) {
+        dispatch(addMessage({ characterId, message }));
+      }
       setIsWaiting(false);
     };
 
@@ -72,7 +79,7 @@ const CombinedWebSocketChat = () => {
   // bg-gradient-to-br from-indigo-100 to-purple-500"
   return (
     <motion.div
-      className="flex py-8 px-4 min-h-screen items-center justify-center border border-yellow-500 bg-gradient-to-br from-gray-900 via-red-900 to-gray-900"
+      className="flex py-8 px-5 min-h-screen items-center justify-center border border-yellow-500 bg-gradient-to-br from-gray-900 via-red-900 to-gray-900"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}

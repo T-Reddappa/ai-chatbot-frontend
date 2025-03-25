@@ -17,7 +17,7 @@ const Home = () => {
             userId: "67cc839b55653d884b64e940",
           },
         });
-        console.log(response);
+        console.log(response, "chathistory");
         dispatch(setAllChats(response.data));
       } catch (error) {
         console.error("Error fetching chat history:", error);
@@ -43,8 +43,8 @@ const Home = () => {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5, duration: 0.8 }}
         >
-          Connect, communicate, and collaborate with your friends in real-time.
-          Experience fast, secure, and engaging messaging like never before!
+          Chat with your favorite movie characters in real-time. Experience fun,
+          secure, and engaging messaging like never before!
         </motion.p>
 
         <motion.button
@@ -53,7 +53,7 @@ const Home = () => {
           whileTap={{ scale: 0.95 }}
           onClick={() => navigate("/characters")}
         >
-          Get Started
+          Meet the Characters ❤️
         </motion.button>
       </div>
       //{" "}

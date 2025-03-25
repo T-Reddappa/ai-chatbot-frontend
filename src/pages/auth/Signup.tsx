@@ -1,14 +1,15 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { signInUser } from "@/store/slices/authSlice";
-import { AppDispatch } from "@/store/store";
-import { useState } from "react";
+import { signInUser, signUpUser } from "@/store/slices/authSlice";
+import { AppDispatch, RootState } from "@/store/store";
+import { useEffect, useState } from "react";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 
 const Signup = () => {
+  const { token } = useSelector((state: RootState) => state.auth);
   const initialFormState = {
     username: "",
     password: "",
@@ -27,8 +28,14 @@ const Signup = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    dispatch(signInUser(formData));
+    dispatch(signUpUser(formData));
   };
+
+  useEffect(() => {
+    if (token) {
+      navigate("/"); // Redirect on successful login
+    }
+  }, [token, navigate]);
 
   return (
     <div className="w-full h-[100vh] flex justify-center items-center  bg-[url(/ai-img.jpg)] bg-cover text-white">

@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { toast } from "sonner";
 
 interface AuthState {
   userId: string;
@@ -35,6 +36,45 @@ const getAuthData = () => {
   return data ? JSON.parse(data) : null;
 };
 
+export const signUpUser = createAsyncThunk<
+  { userId: string; username: string; token: string; message: string },
+  { username: string; password: string },
+  { rejectValue: string }
+>("auth/signUpUser", async (credentials, thunkAPI) => {
+  try {
+    const response = await fetch("http://localhost:3002/auth/signup", {
+      method: "Post",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(credentials),
+    });
+    console.log("signup response", response);
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.log("error data", errorData);
+      toast(errorData.error);
+      throw new Error(errorData.message || "Invalid credentials");
+    }
+
+    const userInfo = await response.json();
+    if (response.status === 201) {
+      toast(`Hey, ${userInfo.username}! Welcome.`);
+      setAuthData({
+        userId: userInfo.userId,
+        username: userInfo.username,
+        token: userInfo.token,
+      });
+    }
+
+    return userInfo;
+  } catch (error: any) {
+    console.log(error, "ERROR");
+    return thunkAPI.rejectWithValue(error.message || "Failed to SignUp");
+  }
+});
+
 export const signInUser = createAsyncThunk<
   { userId: string; username: string; token: string; message: string },
   { username: string; password: string },
@@ -58,6 +98,8 @@ export const signInUser = createAsyncThunk<
       username: result.username,
       token: result.token,
     });
+
+    toast(`Hey, ${result.username}! Welcome back 🎉.`);
     return result;
   } catch (error: any) {
     return thunkAPI.rejectWithValue(error.message || "Failed to sign in");
@@ -76,6 +118,7 @@ const authSlice = createSlice({
         (state.error = null),
         (state.message = ""),
         clearAuthData();
+      toast(`You've signed out successfully 👋`);
     },
     loadAuthFromStorage: (state) => {
       const data = getAuthData();
@@ -102,6 +145,21 @@ const authSlice = createSlice({
       .addCase(signInUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload ?? "Sign-in failed";
+      })
+      .addCase(signUpUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(signUpUser.fulfilled, (state, action) => {
+        state.userId = action.payload.userId;
+        state.username = action.payload.username;
+        state.token = action.payload.token;
+        state.loading = false;
+        state.message = action.payload.message;
+      })
+      .addCase(signUpUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = (action.payload as string) ?? "Sign-up failed";
       });
   },
 });

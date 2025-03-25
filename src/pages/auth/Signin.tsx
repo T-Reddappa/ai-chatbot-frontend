@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -11,7 +11,7 @@ import { signInUser } from "@/store/slices/authSlice";
 
 const Signin = () => {
   const dispatch: AppDispatch = useDispatch();
-  const auth = useSelector((state: RootState) => state.auth);
+  const { token, loading } = useSelector((state: RootState) => state.auth);
 
   const initialFormState = {
     username: "",
@@ -33,9 +33,15 @@ const Signin = () => {
     dispatch(signInUser(formData));
   };
 
+  useEffect(() => {
+    if (token) {
+      navigate("/characters"); // Redirect on successful login
+    }
+  }, [token, navigate]);
+
   return (
     <div className="w-full h-[100vh] flex justify-center items-center bg-[url(/ai-img.jpg)] bg-cover text-white ">
-      {auth.message && <p>{auth.message}</p>}
+      {/* {auth.message && <p>{auth.message}</p>} */}
       <form
         action="submit"
         onSubmit={handleSignin}
@@ -61,7 +67,7 @@ const Signin = () => {
           </div>
         </div>
         <Button type="submit" className="cursor-pointer">
-          {auth.loading ? "Signing in..." : "Sign In"}
+          {loading ? "Signing in..." : "Sign In"}
         </Button>
         <Button
           variant="secondary"

@@ -67,7 +67,7 @@ export function CharacterSelection() {
   if (error) return <p>Error: {error}</p>;
 
   return (
-    <div className="container mx-auto px-20 py-10 bg-gradient-to-br from-gray-900 via-red-900 to-gray-900">
+    <div className="container mx-auto px-20 py-10 bg-gradient-to-br from-gray-900 via-red-900 to-gray-900 border border-yellow-600">
       <div className="text-center mb-8">
         <h1 className="text-3xl font-bold mb-2 text-white">
           Choose Your Fav Character
